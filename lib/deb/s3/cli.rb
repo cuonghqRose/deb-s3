@@ -86,10 +86,12 @@ class Deb::S3::CLI < Thor
     "Can be public, private, or authenticated."
 
   class_option :sign,
-  :type     => :string,
-  :desc     => "GPG Sign the Release file when uploading a package, " +
+  :type       => :array,
+  :repeatable => true,
+  :desc       => "GPG Sign the Release file when uploading a package, " +
     "or when verifying it after removing a package. " +
-    "Use --sign with your GPG key ID to use a specific key (--sign=6643C242C18FE05B)."
+    "Use --sign with your GPG key ID to use a specific key (--sign=6643C242C18FE05B)." +
+    "Can be specified multiple times for multiple singing keys."
 
   class_option :gpg_options,
   :default => "",

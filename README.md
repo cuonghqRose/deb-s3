@@ -29,11 +29,24 @@ With `deb-s3`, there is no need for this. `deb-s3` features:
 
 ## Getting Started
 
-[Install the package via gem](https://github.com/deb-s3/deb-s3/packages/304683) or manually:
+Install the package via gem
 
 ```console
-$ curl -sLO https://github.com/deb-s3/deb-s3/releases/download/0.11.4/deb-s3-0.11.4.gem
-$ gem install deb-s3-0.11.4.gem
+$ gem install deb-s3
+```
+
+or via APT:
+
+```console
+# Add repository key
+$ sudo wget -O /etc/apt/trusted.gpg.d/deb-s3-archive-keyring.gpg https://raw.githubusercontent.com/deb-s3/deb-s3/master/deb-s3-archive-keyring.gpg
+
+# Add repository
+$ echo "deb http://deb-s3-repo.s3.us-east-2.amazonaws.com/debian/ $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list > /dev/null
+
+# Install package
+$ sudo apt-get update
+$ sudo apt-get install deb-s3
 ```
 
 To run the code directly, just check out the repo and run bundler to ensure
@@ -224,4 +237,48 @@ Options:
   -C, [--cache-control=CACHE_CONTROL]                # Add cache-control headers to S3 objects.
 
 Verifies that the files in the package manifests exist
+```
+
+#### Example S3 IAM Policy
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::BUCKETNAME",
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion",
+                "s3:GetObjectAcl",
+                "s3:GetObjectTagging",
+                "s3:GetObjectTorrent",
+                "s3:GetObjectVersion",
+                "s3:GetObjectVersionAcl",
+                "s3:GetObjectVersionTagging",
+                "s3:GetObjectVersionTorrent",
+                "s3:PutObjectAcl",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionAcl",
+                "s3:PutObjectVersionTagging",
+                "s3:ReplicateObject",
+                "s3:RestoreObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::BUCKETNAME/*"
+            ]
+        }
+    ]
+}
 ```
